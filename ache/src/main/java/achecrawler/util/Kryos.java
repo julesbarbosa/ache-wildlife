@@ -23,13 +23,11 @@ import java.util.Collections;
  */
 public class Kryos<T> {
 
-    private static final ThreadLocal<Kryo> KRYOS = new ThreadLocal<Kryo>() {
-        protected Kryo initialValue() {
-            Kryo kryo = new Kryo();
-            registerDeserializers(kryo);
-            return kryo;
-        };
-    };
+    private static final ThreadLocal<Kryo> KRYOS = ThreadLocal.withInitial(() -> {
+        Kryo kryo = new Kryo();
+        registerDeserializers(kryo);
+        return kryo;
+    });
 
     private static void registerDeserializers(Kryo kryo) {
         // register deserializers for java collections that are not available by default

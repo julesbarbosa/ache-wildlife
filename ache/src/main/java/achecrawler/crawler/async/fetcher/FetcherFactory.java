@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import achecrawler.crawler.async.SeleniumFetcher;
 import org.apache.http.impl.cookie.BasicClientCookie;
 
 import achecrawler.crawler.async.HttpDownloaderConfig;
@@ -18,8 +19,10 @@ public class FetcherFactory {
     public static BaseFetcher createFetcher(HttpDownloaderConfig config) {
         if(config.getTorProxy() != null) {
             return createTorProxyFetcher(config);
-        } else if(config.getUseOkHttpFetcher()){
+        } else if(config.getUseOkHttpFetcher()) {
             return createOkHttpFetcher(config);
+        } else if(config.getUseSeleniumFetcher()) {
+            return createSeleniumFetcher(config);
         } else {
             return createSimpleHttpFetcher(config);
         }
@@ -67,9 +70,9 @@ public class FetcherFactory {
     }
     
     public static TorProxyFetcher createTorProxyFetcher(HttpDownloaderConfig config) {
-        
+
         SimpleHttpFetcher httpFetcher = FetcherFactory.createSimpleHttpFetcher(config);
-        
+
         // TOR fetcher is just a simple HTTP fetcher through a proxy and different parameters
         SimpleHttpFetcher torFetcher = FetcherFactory.createSimpleHttpFetcher(config);
 
@@ -108,6 +111,16 @@ public class FetcherFactory {
         }
         return store;
     }
+
+    public static SeleniumFetcher createSeleniumFetcher(HttpDownloaderConfig config) {
+        HttpDownloaderConfig.SeleniumFetcherConfig seleniumFetcherConfig = config.getSeleniumFetcherConfig();
+        return new SeleniumFetcher(
+                seleniumFetcherConfig.waitTimeoutSeconds,
+                seleniumFetcherConfig.maxTotalBufferSize,
+                seleniumFetcherConfig.maxResourceBufferSize,
+                seleniumFetcherConfig.maxPostDataSize);
+    }
+
 
     public static OkHttpFetcher createOkHttpFetcher(HttpDownloaderConfig config) {
 

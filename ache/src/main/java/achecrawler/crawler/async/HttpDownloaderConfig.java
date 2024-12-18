@@ -30,6 +30,20 @@ public class HttpDownloaderConfig {
         public int connectionRequestTimeout = 5 * 60 * 1000;
     }
 
+    public static class SeleniumFetcherConfig {
+        @JsonProperty("crawler_manager.downloader.selenium.wait_timeout_seconds")
+        public int waitTimeoutSeconds = 15;
+
+        @JsonProperty("crawler_manager.downloader.selenium.max_total_buffer_size")
+        public int maxTotalBufferSize = 1000000;
+
+        @JsonProperty("crawler_manager.downloader.selenium.max_resource_buffer_size")
+        public int maxResourceBufferSize = 1000000;
+
+        @JsonProperty("crawler_manager.downloader.selenium.max_post_data_size")
+        public int maxPostDataSize = 1000000;
+    }
+
     public static class OkHttpFetcherConfig {
         @JsonProperty("crawler_manager.downloader.okhttp3.proxy_host")
         public String proxyHost = null;
@@ -96,6 +110,9 @@ public class HttpDownloaderConfig {
     @JsonProperty("crawler_manager.downloader.use_okhttp3_fetcher")
     private boolean useOkHttpFetcher = false;
 
+    @JsonProperty("crawler_manager.downloader.use_selenium_fetcher")
+    private boolean UseSeleniumFetcher = false;
+
     @JsonUnwrapped
     private OkHttpFetcherConfig okHttpFetcherConfig = new OkHttpFetcherConfig();
 
@@ -104,6 +121,9 @@ public class HttpDownloaderConfig {
 
     @JsonUnwrapped
     private TorFetcherConfig torFetcherConfig = new TorFetcherConfig();
+
+    @JsonUnwrapped
+    private SeleniumFetcherConfig seleniumFetcherConfig = new SeleniumFetcherConfig();
 
     @JsonUnwrapped
     private UserAgentConfig userAgentConfig = new UserAgentConfig();
@@ -150,12 +170,20 @@ public class HttpDownloaderConfig {
         return useOkHttpFetcher;
     }
 
+    public boolean getUseSeleniumFetcher() {
+        return UseSeleniumFetcher;
+    }
+
     public OkHttpFetcherConfig getOkHttpFetcherConfig() {
         return okHttpFetcherConfig;
     }
 
     public TorFetcherConfig getTorFetcherConfig() {
         return torFetcherConfig;
+    }
+
+    public SeleniumFetcherConfig getSeleniumFetcherConfig() {
+        return seleniumFetcherConfig;
     }
 
     public HttpClientFetcherConfig getHttpClientFetcherConfig() {
@@ -165,4 +193,5 @@ public class HttpDownloaderConfig {
     public UserAgentConfig getUserAgentConfig() {
         return userAgentConfig;
     }
+
 }
